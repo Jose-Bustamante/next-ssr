@@ -25,6 +25,9 @@ module.exports = {
       new NextFederationPlugin({
         name: 'store',
         filename: 'static/chunks/remoteEntry.js',
+        exposes: {
+          './header': './components/header/header.tsx',
+        },
         remotes: remotes(options.isServer),
         extraOptions:{
           automaticAsyncBoundary: true,

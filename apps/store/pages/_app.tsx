@@ -1,5 +1,7 @@
 import { AppProps } from 'next/app';
 import Head from 'next/head';
+import Header from '../components/header/header';
+
 import './styles.css';
 
 function CustomApp({ Component, pageProps }: AppProps) {
@@ -9,6 +11,7 @@ function CustomApp({ Component, pageProps }: AppProps) {
         <title>Welcome to store!</title>
       </Head>
       <main className="app">
+        <Header />
         <Component {...pageProps} />
       </main>
     </>
