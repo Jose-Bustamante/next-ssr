@@ -1,17 +1,43 @@
-//@ts-check
+// next.config.js
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const { withNx } = require('@nrwl/next/plugins/with-nx');
+// const NextFederationPlugin = require('@module-federation/nextjs-mf');
+const { NextFederationPlugin } = require('@module-federation/nextjs-mf');
 
-/**
- * @type {import('@nrwl/next/plugins/with-nx').WithNxOptions}
- **/
-const nextConfig = {
+
+const remotes = isServer => {
+  const location = isServer ? 'ssr' : 'chunks';
+  return {
+    checkout: `checkout@http://localhost:4200/_next/static/${location}/remoteEntry.js`,
+    store: `store@http://localhost:4300/_next/static/${location}/remoteEntry.js`,
+  };
+};
+
+module.exports = {
   nx: {
     // Set this to true if you would like to to use SVGR
     // See: https://github.com/gregberge/svgr
     svgr: false,
   },
+  webpack5: true,
+  webpack(config, options) {
+    config.plugins.push(
+
+      new NextFederationPlugin({
+        name: 'store',
+        filename: 'static/chunks/remoteEntry.js',
+        remotes: remotes(options.isServer),
+        extraOptions:{
+          automaticAsyncBoundary: true,
+        }
+      })
+    );
+
+    return config;
+  },
 };
 
-module.exports = withNx(nextConfig);
+// _app.js or some other file in as high up in the app (like next's new layouts)
+// this ensures various parts of next.js are imported and "used" somewhere so that they wont be tree shaken out
+// import '@module-federation/nextjs-mf/lib/include-defaults';
+
+

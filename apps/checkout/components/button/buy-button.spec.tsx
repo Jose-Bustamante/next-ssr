@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react';
 
-import BuyButton from './buy-button';
+import BuyButton from './button';
 
 describe('BuyButton', () => {
   it('should render successfully', () => {
